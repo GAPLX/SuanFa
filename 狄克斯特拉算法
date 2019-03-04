@@ -11,8 +11,14 @@
 
 #例：图（狄克斯特拉算法例题）
 def dikeSTL (S,T,B):
+    def find_path(fathers,father):
+        if father == 'A':
+            return ['A']+fathers
+        fathers=[father]+fathers
+        father = T[father]['father']
+        return find_path(fathers,father)    
     if len(B)==len(S): 
-        return T['F']['cost']
+        return [find_path(fathers=[],father='F'),T['F']['cost']]
     x = min([i for i in S if i not in B],key=lambda x:T[x]['cost'])
     for i in S[x]:
         new_cost = S[x][i]+T[x]['cost']
@@ -30,4 +36,4 @@ B=[]
 
 dikeSTL(S,T,B)
 
->>>8
+>>>[['A', 'B', 'E', 'F'], 8]
