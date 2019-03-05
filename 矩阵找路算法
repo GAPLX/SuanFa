@@ -1,0 +1,38 @@
+#问题：现有冒险者从地图左上角到右下角，只能选择不多于规定步数的路线，其能在路上拿到的宝藏价值最多为多少。
+#g_key(grid,path)
+'''
+参数：
+  grid:地图(list)
+  path：最大步数(int)
+  返回值：最大宝藏价值
+思路：采用递归，如在原点，有三条路线，取max（三条路线的所能拿到的宝藏值）
+'''
+
+def g_key(grid,path):
+    def zz(m=0,n=0,fathers=[],cost=0):
+        fathers=fathers[:]+[(m,n)]
+        cost+=grid[m][n]
+        #print(id(cost),id(fathers))
+        directions=[(m-1,n+1),(m-1,n-1),(m+1,n+1),(m+1,n-1),(m,n+1),(m,n-1),(m+1,n),(m-1,n)]
+        directions=[ i for i in directions if 0<=i[0]<len(grid) and 0<=i[1]<len(grid[0]) and i not in fathers ]
+        #print(fathers,cost,directions)
+        if (m,n)==(len(grid)-1,len(grid[0])-1) and len(fathers)<=path:
+            return cost
+        if directions==[] or len(fathers)>path :
+            return 0
+        return max(zz(i[0],i[1],fathers,cost) for i in directions)
+    return zz()
+
+g_key([[1, 6, 7, 2, 4],
+       [0, 4, 9, 5, 3],
+       [7, 2, 5, 1, 4],
+       [3, 3, 2, 2, 9],
+       [2, 6, 1, 4, 0]], 9)
+>>>46
+
+g_key([[1, 2, 3, 4, 5],
+       [2, 3, 4, 5, 1],
+       [3, 4, 5, 1, 2],
+       [4, 5, 1, 2, 3],
+       [5, 1, 2, 3, 4]], 25) == 75
+>>>所需运算时间过长，算法待优化
